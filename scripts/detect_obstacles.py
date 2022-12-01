@@ -9,6 +9,7 @@ from sensor_msgs.msg import LaserScan
 
 # this is called when we get a message from "scan" topic
 def obstacle_callback(msg, pub):
+    print("Callback")
     #-----------------------
     # use "scan" to check whether there's an obstacle within 1 meter
     if msg.ranges[0] < 1: # if so, publish "True" to the topic
@@ -23,7 +24,7 @@ def talker():
 
     #-----------------------
     # subscribe to "scan"
-    sub = rospy.Subscriber("/scan", LaserScan, obstacle_callback, (pub))
+    sub = rospy.Subscriber("/camera/depth/image_raw", LaserScan, obstacle_callback, (pub))
 
     #-----------------------
     # initialize the node

@@ -1,7 +1,10 @@
 <launch>
-    <node name="move_forward" pkg="follow_human" type="move_forward.py" output="screen"/>
+    <include file="$(find astra_camera)/launch/astra.launch"/>
+    <!-- <node name="camera" pkg="astra_camera" type="astra_camera_node" output="screen"/> -->
+    <!-- <node name="move_forward" pkg="follow_human" type="move_forward.py" output="screen"/> -->
     <node name="detect_obstacles" pkg="follow_human" type="detect_obstacles.py" output="screen"/>
-    <include ns="img" file="$(find depthimage_to_laserscan)/launch/launchfile_sample.launch" /> 
-    <include ns="camera" file="$(find astra_camera)/launch/astra.launch" /> 
-    <include ns="camera" file="$(find leg_detector)/launch/leg_detector.launch" /> 
+    <!-- <include ns="img" file="$(find depthimage_to_laserscan)/launch/launchfile_sample.launch" />  -->
+    <!-- <include ns="camera" file="$(find astra_camera)/launch/astra.launch" />  -->
+    <!-- <include ns="camera_leg" file="$(find leg_detector)/launch/leg_detector.launch" />  -->
+    
 </launch>

@@ -5,7 +5,7 @@
 
 import rospy
 from std_msgs.msg import String, Bool
-from follow_human.msg import *
+# from follow_human.msg import Angle
 from geometry_msgs.msg import Twist
 
 # called if the human turns
@@ -24,8 +24,8 @@ def obstacle_callback(data, state):
 
 def talker(state):
     # subscribe to  "orientation" and "obstacle"
-    rospy.Subscriber("orientation", Angle, orientation_callback, (state))
-    rospy.Subscriber("obstacle", Bool, obstacle_callback, (state))
+    # rospy.Subscriber("orientation", Angle, orientation_callback, (state))
+    # rospy.Subscriber("obstacle", Bool, obstacle_callback, (state))
 
     #-----------------------
     # initialize the node
@@ -34,7 +34,7 @@ def talker(state):
 
     #-----------------------
     # publish to /cmd_vel
-    move_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10) 
+    move_pub = rospy.Publisher('/mobile_base/commands/velocity', Twist, queue_size=10) 
 
     #-----------------------
     # create Twist object
@@ -54,15 +54,22 @@ def talker(state):
         if state == "wait":
             move.linear.x = 0 # stop moving forward
             print("waiting") 
+            # print "waiting"
 
         elif state == "orient":
             move.linear.x = 0 # stop moving forward
             # call an action here...
             print("orient") 
+            # print "orient"
 
         elif state == "move forward":
-            move.linear.x = 0.5 # move forward at constant speed
+            move.linear.x = -0.02 # move forward at constant speed
             print("move forward") 
+            # print "move forward"
+        
+        else: # default case: stop moving forward
+            move.linear.x = 0
+            print("stopping") 
 
         # publish the velocity
         move_pub.publish(move)
