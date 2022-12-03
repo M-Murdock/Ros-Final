@@ -5,17 +5,17 @@
 
 import rospy
 from std_msgs.msg import Bool 
-from sensor_msgs.msg import LaserScan
+# from sensor_msgs.msg import LaserScan
+from kobuki_msgs.msg import BumperEvent
 
 # this is called when we get a message from "scan" topic
 def obstacle_callback(msg, pub):
     print("Callback")
     #-----------------------
-    # use "scan" to check whether there's an obstacle within 1 meter
-    if msg.ranges[0] < 1: # if so, publish "True" to the topic
-        pub.publish(False) 
-    else:
-        pub.publish(True)
+    if msg.RELEASED == 0:
+        pub.publish(True) 
+    # else:
+    #     pub.publish(False)
 
 def talker():
     #-----------------------
@@ -24,7 +24,7 @@ def talker():
 
     #-----------------------
     # subscribe to "scan"
-    sub = rospy.Subscriber("/camera/depth/image_raw", LaserScan, obstacle_callback, (pub))
+    sub = rospy.Subscriber("/mobile_base/events/bumper", BumperEvent, obstacle_callback, (pub))
 
     #-----------------------
     # initialize the node
