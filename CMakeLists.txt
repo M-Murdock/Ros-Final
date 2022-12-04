@@ -14,6 +14,9 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   message_generation 
   sensor_msgs
+  cv2 
+  cv_bridge
+  imutils
 )
 
 ## System dependencies are found with CMake's conventions
@@ -109,7 +112,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES follow_human
-#  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+#  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime cv2 cv_bridge imutils
 #  DEPENDS system_lib
 )
 
@@ -163,7 +166,7 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-catkin_install_python(PROGRAMS scripts/move_forward.py  scripts/orient_server.py scripts/detect_obstacles.py
+catkin_install_python(PROGRAMS scripts/move_forward.py  script/cv.py scripts/detect_obstacles.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
