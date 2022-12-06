@@ -14,13 +14,21 @@ state = "wait"
 #-----------------------
 
 
-# performs actions depending on whether there are/are not obstacles
+# stops if there are obstacles
 def obstacle_callback(obstacle_present):
     global state 
+
     if obstacle_present:
         state = "wait"
-    # else: 
-    #     state = "move_forward"
+
+# moves forward if a person is detected
+def person_present_callback(data):
+    global state
+
+    if (data.data == True):
+        state = "move_forward"
+    else:
+        state = "wait"
 
 
 def listener():
@@ -30,6 +38,14 @@ def listener():
     #-----------------------
     # subscribe to /obstacle
     obstacle = rospy.Subscriber("obstacle", Bool, obstacle_callback)
+
+    #-----------------------
+    # subscribe to /person_present
+    person_present = rospy.Subscriber("/person_present", Bool, person_present_callback)
+    # person_present = rospy.wait_for_message("/person_present", Bool)
+    # if person_present.data == True:
+    #     rospy.loginfo("PERSON PRESENT")
+
 
     #-----------------------
     # publish to /cmd_vel
@@ -53,7 +69,7 @@ def listener():
             move.linear.x = 0 # stop moving forward
 
         elif state == "move_forward":
-            move.linear.x = -0.1 # move forward at constant speed
+            move.linear.x = 0.1 # move forward at constant speed
         
         else: # default case: stop moving forward
             move.linear.x = 0
@@ -61,8 +77,8 @@ def listener():
         # publish the velocity
         move_pub.publish(move)
 
-        print("state is: " + state)
-        rospy.loginfo(state)
+        # print("state is: " + state)
+        # rospy.loginfo(state)
         rate.sleep()
     #----------------------
     
@@ -75,7 +91,7 @@ if __name__ == '__main__':
     rate = rospy.Rate(10) # 10hz 
 
     try:
-        state="move_forward"
+        state="wait"
         listener()
     except rospy.ROSInterruptException:
         pass
