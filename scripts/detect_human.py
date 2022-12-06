@@ -5,20 +5,21 @@ import rospy
 from std_msgs.msg import Bool
 from darknet_ros_msgs.msg import BoundingBox, BoundingBoxes, ObjectCount
 from geometry_msgs.msg import Twist 
-# from follow_human.msg import Human
+from follow_human.msg import Human
 
 rospy.init_node('person_present', anonymous=True) 
-move_pub = rospy.Publisher('/person_present', Bool, queue_size=10) 
+move_pub = rospy.Publisher('/person_present', Human, queue_size=10) 
 move_vel = rospy.Publisher('/mobile_base/commands/velocity', Twist, queue_size=10) 
 
 def callback(data):
     global move_pub 
     global move_vel
-    person_present = False
+    person_present = False 
+    person = Human()
 
     for item in data.bounding_boxes:
         if item.Class == "person":
-            move_pub.publish(True)
+            person.person_present = True
             person_present = True 
             # x = (item.xmin + item.xmax)/2
             # rospy.loginfo("Person's x coordinates: " + str(x))
@@ -45,7 +46,9 @@ def callback(data):
             #     move_vel.publish(move) 
 
     if person_present == False:
-        move_pub.publish(False)
+        person.person_present = False
+        
+    move_pub.publish(person)
 
 
 def detect_human():

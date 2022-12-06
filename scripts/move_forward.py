@@ -6,6 +6,7 @@
 import rospy
 from std_msgs.msg import String, Bool
 from geometry_msgs.msg import Twist
+from follow_human.msg import Human
 
 
 # Globals
@@ -25,7 +26,7 @@ def obstacle_callback(obstacle_present):
 def person_present_callback(data):
     global state
 
-    if (data.data == True):
+    if (data.person_present == True):
         state = "move_forward"
     else:
         state = "wait"
@@ -41,7 +42,7 @@ def listener():
 
     #-----------------------
     # subscribe to /person_present
-    person_present = rospy.Subscriber("/person_present", Bool, person_present_callback)
+    person_present = rospy.Subscriber("/person_present", Human, person_present_callback)
     # person_present = rospy.wait_for_message("/person_present", Bool)
     # if person_present.data == True:
     #     rospy.loginfo("PERSON PRESENT")
