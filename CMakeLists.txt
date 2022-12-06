@@ -52,9 +52,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-#add_message_files(
-  #FILES
-#)
+add_message_files(
+  FILES
+  Human.msg
+)
 
 ## Generate services in the 'srv' folder
 #add_service_files(
@@ -163,7 +164,7 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-catkin_install_python(PROGRAMS scripts/move_forward.py  scripts/cv.py scripts/detect_obstacles.py
+catkin_install_python(PROGRAMS scripts/move_forward.py  scripts/detect_human.py scripts/detect_obstacles.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

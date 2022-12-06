@@ -6,7 +6,7 @@
     -->
     <include file="$(find darknet_ros)/launch/darknet_ros.launch"/>
     <node name="move_forward" pkg="follow_human" type="move_forward.py" output="screen"/>
-    <node name="cv" pkg="follow_human" type="cv.py" output="screen"/>
+    <node name="detect_human" pkg="follow_human" type="detect_human.py" output="screen"/>
     <node name="detect_obstacles" pkg="follow_human" type="detect_obstacles.py" output="screen"/>
     <!-- <node name="move_forward" pkg="follow_human" type="move_forward.py" output="screen"/>
     
