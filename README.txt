@@ -1,3 +1,5 @@
+This package is for use on a turtlebot. It uses YOLO to detect the presence of a person and then follow them. 
+
 RUNNING:
 --------------
 1. ssh onto the turtlebot:
