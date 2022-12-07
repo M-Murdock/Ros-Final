@@ -1,52 +1,28 @@
 #!/usr/bin/env python
 
+# Uses YOLO to detect a person. Publishes to /person_present if one is found.
 
 import rospy
 from std_msgs.msg import Bool
 from darknet_ros_msgs.msg import BoundingBox, BoundingBoxes, ObjectCount
-from geometry_msgs.msg import Twist 
 from follow_human.msg import Human
 
 rospy.init_node('person_present', anonymous=True) 
 move_pub = rospy.Publisher('/person_present', Human, queue_size=10) 
-move_vel = rospy.Publisher('/mobile_base/commands/velocity', Twist, queue_size=10) 
 
 def callback(data):
     global move_pub 
-    global move_vel
-    person_present = False 
-    person = Human()
+
+    person = Human() 
+    person.person_present = False
 
     for item in data.bounding_boxes:
-        if item.Class == "person":
-            person.person_present = True
-            person_present = True 
-            # x = (item.xmin + item.xmax)/2
-            # rospy.loginfo("Person's x coordinates: " + str(x))
-
-            # #-----------------------
-            # # publish to /cmd_vel
-            # move = Twist()
-            # #-----------------------
-
-            # if x > 300:
-            #     move.angular.z = -0.1
-            #     rospy.loginfo("> 300")
-            #     move_vel.publish(move) 
-            #     rospy.sleep(0.01*x)
-            #     move.angular.z = 0
-            #     move_vel.publish(move) 
-
-            # if x < 300:
-            #     move.angular.z = 0.1
-            #     rospy.loginfo("< 300")
-            #     move_vel.publish(move) 
-            #     rospy.sleep(0.01*x)
-            #     move.angular.z = 0
-            #     move_vel.publish(move) 
-
-    if person_present == False:
-        person.person_present = False
+        # if (item.Class == "person") and (item.probability > 80):
+        if (item.Class == "person"):
+            person.person_present = True 
+            person.x = (item.xmin + item.xmax)/2
+            # rospy.loginfo("avg x = " + str((item.xmin + item.xmax)/2))
+            # rospy.loginfo("avg y = " + str((item.ymin + item.ymax)/2))
         
     move_pub.publish(person)
 

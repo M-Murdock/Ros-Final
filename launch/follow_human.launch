@@ -4,13 +4,15 @@
     <!-- Note: darknet_ros/config needs to be edited for this to work. Change the camera_reading topic to  
         '/camera/color/image_raw'
     -->
+    
+    
+
     <include file="$(find darknet_ros)/launch/darknet_ros.launch"/>
+        <!-- <arg name="network_param_file" default="$(find darknet_ros)/config/yolo3.yaml"/> -->
+    <!-- </include> -->
+
     <node name="move_forward" pkg="follow_human" type="move_forward.py" output="screen"/>
     <node name="detect_human" pkg="follow_human" type="detect_human.py" output="screen"/>
     <node name="detect_obstacles" pkg="follow_human" type="detect_obstacles.py" output="screen"/>
-    <!-- <node name="move_forward" pkg="follow_human" type="move_forward.py" output="screen"/>
-    
-    <node name="detect_obstacles" pkg="follow_human" type="detect_obstacles.py" output="screen"/> -->
-    
     
 </launch>

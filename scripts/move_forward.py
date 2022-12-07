@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # license removed for brevity
 
-# Moves forward until obstacle is detected or the person turns
+# State machine for controlling robot's actions:
+    # move_right/move_left: turns right/left depending on turtlebot's orientation in relation to person
+    # wait: turtlebot stops if it hits an obstacle 
+    # move_forward: if person is in central view, turtlebot moves forward
+    # search: if no person is within view, rotate until the person is found
 
 import rospy
 from std_msgs.msg import String, Bool
@@ -27,9 +31,15 @@ def person_present_callback(data):
     global state
 
     if (data.person_present == True):
-        state = "move_forward"
+        if data.x > 300:
+            state = "move_right"
+        elif data.x < 200:
+            state = "move_left"
+        else:
+            state = "move_forward"
     else:
-        state = "wait"
+        # state = "search"
+        state= "search"
 
 
 def listener():
@@ -43,10 +53,6 @@ def listener():
     #-----------------------
     # subscribe to /person_present
     person_present = rospy.Subscriber("/person_present", Human, person_present_callback)
-    # person_present = rospy.wait_for_message("/person_present", Bool)
-    # if person_present.data == True:
-    #     rospy.loginfo("PERSON PRESENT")
-
 
     #-----------------------
     # publish to /cmd_vel
@@ -68,12 +74,27 @@ def listener():
         # handle all the states
         if state == "wait":
             move.linear.x = 0 # stop moving forward
+            move.angular.z = 0
 
         elif state == "move_forward":
             move.linear.x = 0.1 # move forward at constant speed
+            move.angular.z = 0
+
+        elif state == "move_right":
+            move.linear.x = 0.1
+            move.angular.z = -0.1 # turn right, move forward at constant speed
+
+        elif state == "move_left":
+            move.linear.x = 0.1
+            move.angular.z = 0.1 # turn left, move forward at constant speed
         
+        elif state == "search":
+            move.linear.x = 0
+            move.angular.z = 0.1
+
         else: # default case: stop moving forward
             move.linear.x = 0
+            move.angular.z = 0
 
         # publish the velocity
         move_pub.publish(move)
